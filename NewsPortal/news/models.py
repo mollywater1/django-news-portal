@@ -10,13 +10,13 @@ class Author(models.Model):
 
     def update_rating(self):
         posts_rating = Post.objects.filter(post_author=self).aggregate(result=Sum('rating')).get('result')
-        comments_rating = Comment.objects.filter(user_comment=self.author_user).aggregate(result=Sum('rating')).get('result')
-        comment_post = Comment.objects.filter(post_comment__post_author__user_comment=self.author_user).aggregate(result=Sum('rating')).get('result')
+        comments_rating = Comment.objects.filter(user_comment=self.author_user).aggregate(result=Sum('rating')).get(
+            'result')
+        comment_post = Comment.objects.filter(post_comment__post_author__author_user=self.author_user).aggregate(
+            result=Sum('rating')).get('result')
 
-        self.rating = (posts_rating * 3 +comments_rating + comment_post)
+        self.rating = (posts_rating * 3 + comments_rating + comment_post)
         self.save()
-
-
 
 
 class Category(models.Model):
