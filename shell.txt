@@ -1,0 +1,51 @@
+
+----------------------
+admin=User.objects.create_user('Admin')
+me=User.objects.create_user('Artyom')  
+----------------------
+admin_author=Author.objects.create(author_user=admin)
+me_author=Author.objects.create(author_user=me)   
+----------------------
+cat1=Category.objects.create(category_name='Horror')
+cat2=Category.objects.create(category_name='Comedy')
+cat3=Category.objects.create(category_name='Thriller')
+cat4=Category.objects.create(category_name='Random')
+----------------------
+post1=Post.objects.create(post_author=me_author,type='post',title='HorrorTitle',text='HorrorTextPost')                    
+post2=Post.objects.create(post_author=admin_author,type='post',title='ThrillerTitle',text='ThrillerTextPost') 
+post3=Post.objects.create(post_author=me_author,type='news',title='RandomTitle',text='RandomTextPost')
+----------------------
+post1.category_post.add(cat1)
+post2.category_post.add(cat1) 
+post3.category_post.add(cat4) 
+
+----------------------
+comm1=Comment.objects.create(text='cool',post_comment=post1,user_comment=me) 
+comm2=Comment.objects.create(text='nice',post_comment=post2,user_comment=me) 
+comm3=Comment.objects.create(text='perfect',post_comment=post3,user_comment=admin) 
+----------------------
+post1.like()                                                                      
+post1.like()
+comm2.like()
+comm2.like()  
+comm2.like()  
+comm1.like()
+comm1.like()      
+comm2.like()  
+----------------------
+me_author.update_rating()
+----------------------
+Author.objects.order_by('-rating').values('user__username', 'rating').first()
+------------------------
+best author
+Author.objects.order_by('-rating').values('author_user__username', 'rating').first()  
+----------------------
+10.
+Post.objects.order_by('-rating').values('date','post_author__author_user__username', 'rating', 'title').first()
+Post.objects.order_by('-rating').first().preview()
+----------------------
+11.
+Comment.objects.filter(post_comment=best_p.id).values('date','user_comment__username','rating','text') 
+
+
+
