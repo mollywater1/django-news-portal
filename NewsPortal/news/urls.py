@@ -1,6 +1,6 @@
 from django.urls import path
 # Импортируем созданное нами представление
-from .views import NewsList
+from .views import NewsList,News
 
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
    # а Django ожидает функцию, нам надо представить этот класс в виде view.
    # Для этого вызываем метод as_view.
    path('', NewsList.as_view()),
+   path('<int:pk>',News.as_view())
 ]
