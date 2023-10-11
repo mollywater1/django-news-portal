@@ -11,7 +11,7 @@ class NewsList(ListView):
     context_object_name = 'newslist'
 
     def get_queryset(self):
-        queryset = Post.objects.filter(type='news')
+        queryset = Post.objects.order_by('-date')
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -26,8 +26,6 @@ class NewsDetail(DetailView):
     template_name = 'news.html'
     context_object_name = 'news'
 
-    def get_object(self, queryset=None):
-        return get_object_or_404(Post.objects.filter(type='news'), pk=self.kwargs.get('pk'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
