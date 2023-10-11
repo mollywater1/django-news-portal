@@ -3,7 +3,7 @@
 {% block title %}
 News
 {% endblock title %}
-
+{%load custom_filters%}
 {% block content %}
    <h1>{{news.title}}</h1>
    <h3>{{ time_now|date:'M d Y' }}</h3>
@@ -18,7 +18,7 @@ News
            <tr>
                <td>{{ news.title }}</td>
                <td>{{news.date|date:'M d Y'}}</td>
-               <td>{{ news.text}}</td>
+               <td>{{ news.text|censor}}</td>
            </tr>
 
        </table>
