@@ -1,13 +1,35 @@
-<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
 
-<!-- Название у нас будет products -->
 {% block title %}
 News
 {% endblock title %}
 
-<!-- В контенте на странице мы выводим все товары -->
 {% block content %}
-<h1>Все новости</h1>
-{{ newslist }}
+   <h1>Все новости</h1>
+   <h3>{{ time_now|date:'M d Y' }}</h3>
+   <h3>Количество новостей = {{newslist|length}}</h3>
+   <!-- Если в переменной next_sale будет None,
+   то выведется указанный в фильтре текст -->
+
+   <hr>
+   {% if newslist %}
+       <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Дата Публикации</td>
+               <td>Текст</td>
+           </tr>
+
+           {% for news in newslist %}
+           <tr>
+               <td>{{ news.title }}</td>
+               <td>{{news.date|date:'M d Y'}}</td>
+               <td>{{ news.text|truncatechars:20 }}</td>
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>News not found!</h2>
+   {% endif %}
 {% endblock content %}
