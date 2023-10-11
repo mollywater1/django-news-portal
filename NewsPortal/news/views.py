@@ -1,6 +1,7 @@
 from django.views.generic import ListView, DetailView
 from .models import Post
 from datetime import datetime
+from django.shortcuts import get_object_or_404
 
 
 class NewsList(ListView):
@@ -26,13 +27,10 @@ class NewsDetail(DetailView):
     context_object_name = 'news'
 
     def get_object(self, queryset=None):
-        obj = Post.objects.filter(type='news')
-        return obj
+        return get_object_or_404(Post.objects.filter(type='news'), pk=self.kwargs.get('pk'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()
         return context
-    def get_queryset(self):
-        queryset = Post.objects.filter(type='news')
-        return queryset
+
