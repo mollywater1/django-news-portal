@@ -1,10 +1,11 @@
-from django.views.generic import ListView, DetailView,CreateView,UpdateView,DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
 from datetime import datetime
 from .filters import PostFilter
 from .forms import PostForm
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 
 class NewsList(ListView):
@@ -45,47 +46,64 @@ class NewsSearch(ListView):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
         return context
-class NewsUpdate(UpdateView):
-    model=Post
-    fields = ['post_author','title','text']
+
+
+class NewsUpdate(UpdateView,LoginRequiredMixin):
+    model = Post
+    fields = ['post_author', 'title', 'text']
     template_name = 'news_edit.html'
+
     def get_queryset(self):
         return super().get_queryset().filter(type='news')
+
+
 class NewsCreate(CreateView):
     form_class = PostForm
-    model=Post
+    model = Post
     template_name = 'news_create.html'
+
     def form_valid(self, form):
-        Post=form.save(commit=False)
-        Post.type='news'
+        Post = form.save(commit=False)
+        Post.type = 'news'
         return super().form_valid(form)
+
+
 class NewsDelete(DeleteView):
-    model=Post
+    model = Post
     template_name = 'news_delete.html'
     success_url = reverse_lazy('post_list')
+
     def get_queryset(self):
         return super().get_queryset().filter(type='news')
-class ArticleUpdate(UpdateView):
-    model=Post
-    fields = ['post_author','title','text']
+
+
+class ArticleUpdate(UpdateView,LoginRequiredMixin):
+    model = Post
+    fields = ['post_author', 'title', 'text']
     template_name = 'article_edit.html'
-    def get_queryset(self):
-        return super().get_queryset().filter(type='post')
-class ArticleCreate(CreateView):
-    form_class = PostForm
-    model=Post
-    template_name = 'article_create.html'
-    def form_valid(self, form):
-        Post=form.save(commit=False)
-        Post.type='post'
-        return super().form_valid(form)
-class ArticleDelete(DeleteView):
-    model=Post
-    template_name = 'article_delete.html'
-    success_url = reverse_lazy('post_list')
+
     def get_queryset(self):
         return super().get_queryset().filter(type='post')
 
+
+class ArticleCreate(CreateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'article_create.html'
+
+    def form_valid(self, form):
+        Post = form.save(commit=False)
+        Post.type = 'post'
+        return super().form_valid(form)
+
+
+class ArticleDelete(DeleteView):
+    model = Post
+    template_name = 'article_delete.html'
+    success_url = reverse_lazy('post_list')
+
+    def get_queryset(self):
+        return super().get_queryset().filter(type='post')
 
 
 class NewsDetail(DetailView):
