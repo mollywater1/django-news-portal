@@ -7,7 +7,6 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-
 class NewsList(ListView):
     model = Post
     ordering = 'id'
@@ -48,7 +47,7 @@ class NewsSearch(ListView):
         return context
 
 
-class NewsUpdate(UpdateView,LoginRequiredMixin):
+class NewsUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ['post_author', 'title', 'text']
     template_name = 'news_edit.html'
@@ -77,7 +76,7 @@ class NewsDelete(DeleteView):
         return super().get_queryset().filter(type='news')
 
 
-class ArticleUpdate(UpdateView,LoginRequiredMixin):
+class ArticleUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ['post_author', 'title', 'text']
     template_name = 'article_edit.html'
