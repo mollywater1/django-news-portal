@@ -9,6 +9,9 @@ News
    <h1>Все новости</h1>
    {# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
    <h3>{{ time_now|date:'M d Y' }}</h3>
+{% if is_not_premium %}
+<button> <a href="upgrade/"> Хочу стать автором!</a> </button>
+{% endif %}
    <h3>Количество новостей = {{newslist|length}}</h3>
 
    <hr>
@@ -55,4 +58,5 @@ News
            <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
        {% endif %}
    {% endif %}
+
 {% endblock content %}

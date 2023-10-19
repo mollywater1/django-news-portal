@@ -4,7 +4,10 @@ from datetime import datetime
 from .filters import PostFilter
 from .forms import PostForm
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import redirect
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
 
 
 class NewsList(ListView):
@@ -14,19 +17,16 @@ class NewsList(ListView):
     context_object_name = 'newslist'
     paginate_by = 10
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['time_now'] = datetime.utcnow()
-        return context
-
     def get_queryset(self):
         queryset = super().get_queryset()
         self.filterset = PostFilter(self.request.GET, queryset)
         return self.filterset.qs
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        context['time_now'] = datetime.utcnow()
+        context['is_not_premium'] = not self.request.user.groups.filter(name='authors').exists()
         return context
 
 
@@ -47,7 +47,8 @@ class NewsSearch(ListView):
         return context
 
 
-class NewsUpdate(LoginRequiredMixin, UpdateView):
+class NewsUpdate(LoginRequiredMixin,PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post')
     model = Post
     fields = ['post_author', 'title', 'text']
     template_name = 'news_edit.html'
@@ -56,7 +57,8 @@ class NewsUpdate(LoginRequiredMixin, UpdateView):
         return super().get_queryset().filter(type='news')
 
 
-class NewsCreate(CreateView):
+class NewsCreate(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
+    permission_required = ('news.add_post')
     form_class = PostForm
     model = Post
     template_name = 'news_create.html'
@@ -67,7 +69,8 @@ class NewsCreate(CreateView):
         return super().form_valid(form)
 
 
-class NewsDelete(DeleteView):
+class NewsDelete(LoginRequiredMixin,PermissionRequiredMixin,DeleteView):
+    permission_required = ('news.delete_post')
     model = Post
     template_name = 'news_delete.html'
     success_url = reverse_lazy('post_list')
@@ -76,7 +79,8 @@ class NewsDelete(DeleteView):
         return super().get_queryset().filter(type='news')
 
 
-class ArticleUpdate(LoginRequiredMixin, UpdateView):
+class ArticleUpdate(LoginRequiredMixin,PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post')
     model = Post
     fields = ['post_author', 'title', 'text']
     template_name = 'article_edit.html'
@@ -85,7 +89,8 @@ class ArticleUpdate(LoginRequiredMixin, UpdateView):
         return super().get_queryset().filter(type='post')
 
 
-class ArticleCreate(CreateView):
+class ArticleCreate(LoginRequiredMixin,PermissionRequiredMixin,CreateView):
+    permission_required = ('news.add_post')
     form_class = PostForm
     model = Post
     template_name = 'article_create.html'
@@ -96,7 +101,8 @@ class ArticleCreate(CreateView):
         return super().form_valid(form)
 
 
-class ArticleDelete(DeleteView):
+class ArticleDelete(LoginRequiredMixin,PermissionRequiredMixin,DeleteView):
+    permission_required = ('news.delete_post')
     model = Post
     template_name = 'article_delete.html'
     success_url = reverse_lazy('post_list')
@@ -115,3 +121,12 @@ class NewsDetail(DetailView):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()
         return context
+
+
+@login_required
+def upgrade_me(request):
+    user = request.user
+    premium_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        premium_group.user_set.add(user)
+    return redirect('/posts/')
