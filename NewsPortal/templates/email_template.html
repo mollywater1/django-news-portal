@@ -6,7 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>{{ Post.title }} Спасибо за запись!</h2>
-    <p> Вы записаны на {{ Post.date|date:"d-M-Y" }} по вопросу: {{ Post.text|truncatechars:50 }} </p>
+    <h1>{{ title }} </h1>
+    <h2>Вышла новая  <a href="{{ link }}">статья!</a></h2>
+    <p> Превью: {{ text|truncatechars:20 }}</p>
 </body>
 </html>

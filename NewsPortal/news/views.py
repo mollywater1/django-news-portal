@@ -100,38 +100,11 @@ class ArticleCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'article_create.html'
 
     def form_valid(self, form):
-        # Set author and post_type
-        form.instance.author = self.request.user
-        form.instance.post_type = 'news'
+        Post = form.save(commit=False)
+        Post.type = 'post'
+        return super().form_valid(form)
 
-        today = timezone.now().date()
-        user = self.request.user
 
-        form.instance.author = user
-        form.instance.post_type = 'news'
-
-        response = super().form_valid(form)
-
-        email_html_content = generate_email_content(form.instance)
-        email_subject = f'Новая новость: {form.instance.title}'
-
-        username = self.request.user.username
-        news_url = self.request.build_absolute_uri(form.instance.get_absolute_url())
-        email_message = f'Здравствуйте, {username}. Новая статья в твоём любимом разделе!'
-        email_message += f'<br><a href="{news_url}">Перейти к статье</a><br>'
-        email_message += email_html_content
-
-        context = ssl.create_default_context()
-        server = SMTP_SSL('smtp.mail.me.com', 587, context=context)
-
-        try:
-            send_mail(email_subject, '', 'ownyx@icloud.com',
-                      [self.request.user.email], html_message=email_message)
-
-        finally:
-            server.quit()
-
-        return response
 class ArticleDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = ('news.delete_post')
     model = Post
@@ -183,9 +156,3 @@ def upgrade_me(request):
     if not request.user.groups.filter(name='authors').exists():
         premium_group.user_set.add(user)
     return redirect('/posts/')
-
-
-def generate_email_content(post):
-    html_content = f'<h1>{post.title}</h1>'
-    html_content += f'<p>Содержимое новости:{post.content[:50]}</p>'
-    return html_content

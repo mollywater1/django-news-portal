@@ -3,8 +3,8 @@ from django.dispatch import receiver
 from django.db.models.signals import m2m_changed
 from django.template.loader import render_to_string
 
-from .models import PostCategory
-from ..NewsPortal import settings
+from .models import PostCategory,Post
+from NewsPortal import settings
 
 
 @receiver(m2m_changed, sender=PostCategory)
@@ -16,13 +16,14 @@ def notify_about_new_post(sender, instance, **kwargs):
         for cat in categories:
             subscribers = cat.subscribers.all()
             subscribers_email += [s.email for s in subscribers]
-        send_notifications(instance.preview(), instance.pk, instance.title, subscribers_email)
+        send_notifications(instance.preview, instance.pk, instance.title, subscribers_email)
 
 
 def send_notifications(preview, pk, title, subscribers):
     html_content = render_to_string(
-        'post_created_email.html',
+        'email_template.html',
         {
+            'cat' : PostCategory.category_post,
             'text': preview,
             'link': f'{settings.SITE_URL}/posts/{pk}'
         }

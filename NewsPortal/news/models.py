@@ -58,7 +58,7 @@ class PostCategory(models.Model):
     post_category = models.ForeignKey(Post, on_delete=models.CASCADE)
     category_post = models.ForeignKey(Category, on_delete=models.CASCADE)
     def __str__(self):
-        return self.cat.name
+        return self.post_category.name
 
 
 class Comment(models.Model):

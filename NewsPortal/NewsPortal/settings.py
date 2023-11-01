@@ -96,10 +96,10 @@ EMAIL_HOST_USER = 'artem.lawlite'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_SSL = True
 
-DEFAULT_FROM_EMAIL = 'artem.lawlite'
-DEFAULT_FROM_IMAIL = 'artem.lawlite'
-SERVER_EMAIL = 'artem.lawlite'
-EMAIL_ADMIN = 'artem.lawlite'
+DEFAULT_FROM_EMAIL = 'artem.lawlite@yandex.ru'
+DEFAULT_FROM_IMAIL = 'artem.lawlite@yandex.ru'
+SERVER_EMAIL = 'artem.lawlite@yandex.ru'
+EMAIL_ADMIN = 'artem.lawlite@yandex.ru'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
