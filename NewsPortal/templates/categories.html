@@ -11,11 +11,19 @@ Categories
     <tr>
         <td>Название</td>
         <td>Количество постов</td>
-        <td>Подписчии</td>
+        <td>Подписчики</td>
     </tr>
     {% for cats in category_news_list %}
     <tr>
         <td>{{ cats }}</td>
+        <td>{{ cats.post_set.count }}</td>
+        <td>
+            {% if request.user in cats.subscribers.all %}
+            <a href="{% url 'unsubscribe' cats.id %}">Отписаться</a>
+            {% else %}
+            <a href="{% url 'subscribe' cats.id %}">Подписаться</a>
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>

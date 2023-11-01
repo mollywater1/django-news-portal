@@ -13,7 +13,7 @@ News
 <button> <a href="upgrade/"> Хочу стать автором!</a> </button>
 {% endif %}
    <h3>Количество новостей = {{newslist|length}}</h3>
-
+  <button><a href="categories/">Все категории</a></button>
    <hr>
    {% if newslist %}
        <table>
@@ -22,6 +22,7 @@ News
                <td>Дата Публикации</td>
                <td>Текст</td>
                <td>Автор</td>
+               <td>Категория</td>
            </tr>
 
            {% for news in newslist %}
@@ -30,6 +31,7 @@ News
                <td>{{news.date|date:'M d Y'}}</td>
                <td>{{ news.text|truncatechars:20|censor}}</td>
                <td>{{news.post_author.author_user}}</td>
+               <td>{{ news.category_post.category_name }}</td>
            </tr>
            {% endfor %}
 

@@ -89,12 +89,17 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_FORMS = {'signup': 'news.forms.CommonSignupForm'}
-EMAIL_HOST='smtp.mail.me.com'
-EMAIL_PORT='587'
-EMAIL_USE_SSL=True
-EMAIL_HOST_USER=''
-EMAIL_HOST_PASSWORD=''
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.me.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ownyx@icloud.com'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_SSL = True
 
+DEFAULT_FROM_EMAIL = 'ownyx@icloud.com'
+DEFAULT_FROM_IMAIL = 'ownyx@icloud.com'
+SERVER_EMAIL = 'ownyx@icloud.com'
+EMAIL_ADMIN = 'ownyx@icloud.com'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
