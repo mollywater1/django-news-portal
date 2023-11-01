@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
 ]
 SITE_ID = 1
 MIDDLEWARE = [
@@ -80,26 +81,22 @@ AUTHENTICATION_BACKENDS = [
 
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/email/login/'
 LOGIN_REDIRECT_URL = '/posts/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/posts/'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_FORMS = {'signup': 'news.forms.CommonSignupForm'}
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'artem.lawlite'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'yoyjtukzcvlxeqko'
 EMAIL_USE_SSL = True
 
 DEFAULT_FROM_EMAIL = 'artem.lawlite@yandex.ru'
-DEFAULT_FROM_IMAIL = 'artem.lawlite@yandex.ru'
-SERVER_EMAIL = 'artem.lawlite@yandex.ru'
-EMAIL_ADMIN = 'artem.lawlite@yandex.ru'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

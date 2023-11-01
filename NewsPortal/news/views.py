@@ -12,6 +12,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, reverse, redirect
 from django.template.loader import render_to_string
+from django.core.exceptions import ValidationError
 
 
 class NewsList(ListView):
@@ -102,6 +103,11 @@ class ArticleCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         Post = form.save(commit=False)
         Post.type = 'post'
+        today = timezone.now().date()
+        user = self.request.user
+        num_news_today = Post.objects.filter(author=user, created_at__date=today).count()
+        if num_news_today >= 3:
+            raise ValidationError("Вы не можете публиковать больше трёх новостей в день!.")
         return super().form_valid(form)
 
 
