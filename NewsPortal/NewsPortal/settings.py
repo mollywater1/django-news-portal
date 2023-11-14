@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_apscheduler',
+    'apscheduler'
 
 ]
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
